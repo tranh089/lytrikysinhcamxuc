@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Cảm Xúc</title>
+    <style>
+        :root {
+            --primary: #4a6bdf;
+            --secondary: #f5f7fa;
+            --accent: #ff6b6b;
+            --text: #2c3e50;
+            --light-text: #7f8c8d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--secondary);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .calendar-container {
+            display: flex;
+            width: 100%;
+        }
+        
+        /* Phần thẻ lật bên trái */
+        .flip-card-section {
+            width: 50%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-right: 1px solid #e0e0e0;
+        }
+        
+        .flip-card {
+            width: 100%;
+            max-width: 450px;
+            height: 600px;
+            perspective: 1000px;
+            margin-bottom: 2rem;
+        }
+        
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .flip-card.clicked .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .flip-card-front {
+            background-color: var(--primary);
+            color: white;
+            transform: rotateY(0deg);
+        }
+        
+        .flip-card-back {
+            background-color: white;
+            transform: rotateY(180deg);
+        }
+        
+        .question-number {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--light-text);
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 1rem;
+            line-height: 1.5;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 70%;
+        }
+        
+        .flip-hint {
+            position: absolute;
+            bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        /* Phần đồng hồ bên phải */
+        .timer-section {
+            width: 50%;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .timer-container {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .timer-display {
+            font-size: 4rem;
+            font-family: monospace;
+            margin-bottom: 2rem;
+            color: var(--primary);
+        }
+        
+        .preset-times {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .time-btn {
+            padding: 0.5rem 1rem;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-btn:hover {
+            background-color: #d0d0d0;
+        }
+        
+        .timer-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .start-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .pause-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .reset-btn {
+            background-color: transparent;
+            border: 1px solid var(--light-text);
+            color: var(--text);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+        
+        .instructions {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            max-width: 400px;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        
+        .instructions ol {
+            padding-left: 1.2rem;
+        }
+        
+        .instructions li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .calendar-container {
+                flex-direction: column;
+            }
+            
+            .flip-card-section, .timer-section {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-container">
+        <!-- Phần thẻ lật Critical Thinking -->
+        <div class="flip-card-section">
+            <h1>Critical Thinking Questions</h1>
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="question-text">Bạn đang cảm thấy điều gì ngay lúc này?</div>
+                        <div class="flip-hint">Nhấn để xem câu hỏi tiếp theo</div>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="question-text">Điều gì đã dẫn đến cảm xúc này?</div>
+                        <div class="flip-hint">Nhấn để xem câu hỏi tiếp theo</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>Hướng dẫn sử dụng</h3>
+                <ol>
+                    <li>Dừng lại và suy nghĩ về mỗi câu hỏi</li>
+                    <li>Viết ra giấy câu trả lời của bạn</li>
+                    <li>Nhấn vào thẻ để đọc câu hỏi tiếp theo</li>
+                    <li>Sử dụng đồng hồ để phân bổ thời gian suy nghĩ</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- Phần đồng hồ bấm giờ -->
+        <div class="timer-section">
+            <h1>Thời gian suy nghĩ</h1>
+            <div class="timer-container">
+                <div class="timer-display" id="display">00:00</div>
+                <div class="preset-times">
+                    <button class="time-btn" data-time="30">30s</button>
+                    <button class="time-btn" data-time="60">1 phút</button>
+                    <button class="time-btn" data-time="120">2 phút</button>
+                    <button class="time-btn" data-time="300">5 phút</button>
+                </div>
+                <div class="timer-controls">
+                    <button class="start-btn" id="start">Bắt đầu</button>
+                    <button class="pause-btn" id="pause">Tạm dừng</button>
+                    <button class="reset-btn" id="reset">Đặt lại</button>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>Tại sao lại cần đồng hồ?</h3>
+                <p>Đồng hồ giúp bạn dừng lại, phân tích cảm xúc kỹ lưỡng trước khi hành động, tránh những quyết định bốc đồng.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Timer logic
+        let timer;
+        let seconds = 0; // Start counting from 0
+        let isRunning = false;
+        
+        const display = document.getElementById('display');
+        const startBtn = document.getElementById('start');
+        const pauseBtn = document.getElementById('pause');
+        const resetBtn = document.getElementById('reset');
+        
+        function formatTime(sec) {
+            const minutes = Math.floor(sec / 60);
+            const remainingSeconds = sec % 60;
+            return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+        
+        function updateDisplay() {
+            display.textContent = formatTime(seconds);
+        }
+        
+        let countDirection = 'up'; // Track counting direction
+
+        function startTimer() {
+            if (countDirection === 'up') {
+                seconds = 0; // Always start from 0 when counting up
+            }
+            
+            if (!isRunning) {
+                isRunning = true;
+                document.querySelectorAll('.instructions').forEach(el => {
+                    el.style.display = 'none';
+                });
+                timer = setInterval(() => {
+                    if (countDirection === 'up') {
+                        seconds++;
+                    } else {
+                        seconds--;
+                        if (seconds <= 0) pauseTimer();
+                    }
+                    updateDisplay();
+                }, 1000);
+            }
+        }
+        
+        function pauseTimer() {
+            clearInterval(timer);
+            isRunning = false;
+            // Don't show instructions when paused, only on reset
+        }
+        
+        function resetTimer() {
+            pauseTimer();
+            seconds = 0;
+            countDirection = 'up';
+            updateDisplay();
+            // Enable start button after reset
+            isRunning = false;
+            // Make sure instructions are visible
+            document.querySelectorAll('.instructions').forEach(el => {
+                el.style.display = 'block';
+            });
+        }
+
+        // Add preset time buttons functionality
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                pauseTimer();
+                seconds = parseInt(this.dataset.time);
+                countDirection = 'down';
+                updateDisplay();
+                startTimer();
+            });
+        });
+        
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        
+        // Flip card questions array
+        const questions = [
+            "Bạn đang cảm thấy điều gì ngay lúc này?",
+            "Điều gì đã dẫn đến cảm xúc này?",
+            "Suy nghĩ này có thực sự đúng với tình huống không?",
+            "Bạn có thể nhìn nhận tình huống này theo cách khác không?",
+            "Hậu quả có thể xảy ra nếu bạn hành động theo cảm xúc này?",
+            "Có giải pháp nào tốt hơn không?",
+            "Bạn sẽ nghĩ gì về tình huống này sau 1 tháng nữa?",
+            "Thiền sư Thích Nhất Hạnh: 'Mỗi hơi thở là cơ hội để bắt đầu lại'",
+            "Triết gia Marcus Aurelius: 'Bạn có quyền kiểm soát tâm trí của mình - không phải các sự kiện bên ngoài'", 
+            "Bước đầu tiên để giải quyết vấn đề là gì?",
+            "Bạn có đang phản ứng quá mức với tình huống này không?",
+            "Người khác sẽ nhìn nhận tình huống này thế nào?",
+            "Thiền sư Ajahn Chah: 'Nếu buông bỏ được chút ít, bạn sẽ có chút ít bình an'",
+            "Điều gì thực sự quan trọng trong tình huống này?",
+            "Bạn có đang đổ lỗi cho hoàn cảnh thay vì tìm giải pháp không?"
+        ];
+        
+        // Flip card logic
+        const flipCards = document.querySelectorAll('.flip-card');
+        let currentQuestionIndex = 0;
+        
+        flipCards.forEach(card => {
+            card.addEventListener('click', function() {
+                this.classList.toggle('clicked');
+                currentQuestionIndex = (currentQuestionIndex + 1) % questions.length;
+                
+                const front = this.querySelector('.flip-card-front .question-text');
+                const back = this.querySelector('.flip-card-back .question-text');
+                
+                // Alternate between front and back questions
+                if (currentQuestionIndex % 2 === 0) {
+                    front.textContent = questions[currentQuestionIndex];
+                } else {
+                    back.textContent = questions[currentQuestionIndex];
+                }
+                
+                // Update question numbers
+                const frontNumber = this.querySelector('.flip-card-front .question-number');
+                const backNumber = this.querySelector('.flip-card-back .question-number');
+                frontNumber.textContent = `Câu hỏi #${currentQuestionIndex + 1}`;
+                backNumber.textContent = `Câu hỏi #${currentQuestionIndex + 2}`;
+                
+                // Reset card position after animation
+                setTimeout(() => {
+                    this.querySelector('.flip-card-inner').style.transform = 'rotateY(0deg)';
+                }, 600);
+            });
+        });
+    </script>
+</body>
+</html>
+
