@@ -244,46 +244,41 @@
                 border-bottom: 1px solid #e0e0e0;
             }
         }
+        </style>
     /* ...css hiện tại... */
 
 /* === Mobile-specific styles === */
 @media (max-width: 768px) {
-  .calendar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 16px 0;
-  }
-
   .flip-card-section,
   .timer-section {
-    width: 100%;
-    max-width: 95%;
-    border-right: none;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 16px 0;
+    width: 50%;
+    padding: 0.5rem;
+    box-sizing: border-box;
   }
 
-  h1 {
-    font-size: 1.5rem;
-    text-align: center;
+  .flip-card {
+    height: auto;
+    max-height: 400px;
   }
 
   .question-text {
-    font-size: 1.1rem;
-    line-height: 1.4;
+    font-size: 1rem;
   }
 
-  .flip-card,
-  .timer-section {
-    box-shadow: none;
-    background: #fff;
-    border-radius: 8px;
-    padding: 12px;
+  .timer-display {
+    font-size: 2.5rem;
+  }
+
+  .time-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .timer-controls button {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
   }
 }
-</style>
     </style>
 </head>
 <body>
