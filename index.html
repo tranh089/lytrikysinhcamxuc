@@ -220,23 +220,15 @@
             line-height: 1.5;
         }
         
-    @media (max-width: 768px) {
-  .calendar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .flip-card-section,
-  .timer-section {
-    width: 100%;
-    max-width: 90%;
-    border-right: none;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 16px;
-  }
-}
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .calendar-container {
+                flex-direction: column;
+            }
             
             .flip-card-section, .timer-section {
                 width: 100%;
@@ -244,41 +236,6 @@
                 border-bottom: 1px solid #e0e0e0;
             }
         }
-        </style>
-    /* ...css hiện tại... */
-
-/* === Mobile-specific styles === */
-@media (max-width: 768px) {
-  .flip-card-section,
-  .timer-section {
-    width: 50%;
-    padding: 0.5rem;
-    box-sizing: border-box;
-  }
-
-  .flip-card {
-    height: auto;
-    max-height: 400px;
-  }
-
-  .question-text {
-    font-size: 1rem;
-  }
-
-  .timer-display {
-    font-size: 2.5rem;
-  }
-
-  .time-btn {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.6rem;
-  }
-
-  .timer-controls button {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-  }
-}
     </style>
 </head>
 <body>
