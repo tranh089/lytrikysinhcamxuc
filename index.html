@@ -220,15 +220,23 @@
             line-height: 1.5;
         }
         
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-                height: auto;
-            }
-            
-            .calendar-container {
-                flex-direction: column;
-            }
+    @media (max-width: 768px) {
+  .calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .flip-card-section,
+  .timer-section {
+    width: 100%;
+    max-width: 90%;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 16px;
+  }
+}
             
             .flip-card-section, .timer-section {
                 width: 100%;
