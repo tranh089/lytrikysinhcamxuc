@@ -244,6 +244,46 @@
                 border-bottom: 1px solid #e0e0e0;
             }
         }
+    /* ...css hiện tại... */
+
+/* === Mobile-specific styles === */
+@media (max-width: 768px) {
+  .calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 0;
+  }
+
+  .flip-card-section,
+  .timer-section {
+    width: 100%;
+    max-width: 95%;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 16px 0;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .question-text {
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+
+  .flip-card,
+  .timer-section {
+    box-shadow: none;
+    background: #fff;
+    border-radius: 8px;
+    padding: 12px;
+  }
+}
+</style>
     </style>
 </head>
 <body>
